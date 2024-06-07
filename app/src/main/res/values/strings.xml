@@ -1,0 +1,35 @@
+<resources>
+    <string name="app_name">EpApp</string>
+    <string name="question_1">당신은 사람들과의 대화를 즐깁니까?</string>
+    <string name="question_2">당신은 사람들이 주목하는 것을 좋아합니까?</string>
+    <string name="question_3">당신은 세부 사항에 집중하는 것을 좋아합니까?</string>
+    <string name="question_4">당신은 미래에 대한 계획을 세우는 것을 좋아합니까?</string>
+    <string name="question_5">당신은 문제 해결 시 논리적인 접근을 선호하나요?</string>
+    <string name="question_6">당신은 감정적인 상황에서도 냉정함을 유지하려고 노력하나요?</string>
+    <string name="question_7">당신은 일을 마무리하는 것을 선호하나요?</string>
+    <string name="question_8">당신은 계획에 따라 행동하는 것을 좋아하나요?</string>
+    <string name="question_9">당신은 파티나 모임에서 활발하게 참여하나요?</string>
+    <string name="question_10">새로운 사람들과 만나는 것을 좋아하나요?</string>
+    <string name="question_11">다른 사람들과 함께 일하면 더 재미있나요?</string>
+    <string name="question_12">혼자 시간을 보내는 것을 좋아하나요?</string>
+    <string name="question_13">대부분의 시간을 집에서 혼자 보내는 것을 선호하나요?</string>
+    <string name="question_14">한 사람이나 소수의 사람들과의 깊은 대화를 더 좋아하나요?</string>
+    <string name="question_15">일상적인 일에 대해 자세히 생각하는 것을 좋아하나요?</string>
+    <string name="question_16">현재의 사실과 경험에 기반하여 문제를 해결하는 것을 선호하나요?</string>
+    <string name="question_17">현재의 상황을 분석하는 것을 좋아하나요?</string>
+    <string name="question_18">먼 미래에 대한 비전을 가지고 있나요?</string>
+    <string name="question_19">특정한 상황에서 미래 결과를 예측하는 것을 선호하나요?</string>
+    <string name="question_20">아이디어와 가능성에 대한 상상력이 풍부한가요?</string>
+    <string name="question_21">문제를 해결할 때 객관적인 사고를 중요하게 생각하나요?</string>
+    <string name="question_22">결정을 내릴 때 감정보다는 논리를 따르는 것을 선호하나요?</string>
+    <string name="question_23">다른 사람의 의견을 분석하고 이해하는 것을 중요하게 생각하나요?</string>
+    <string name="question_24">다른 사람의 감정에 민감하게 반응하나요?</string>
+    <string name="question_25">사람들의 감정과 상황에 공감하는 것을 중요하게 생각하나요?</string>
+    <string name="question_26">감정적인 연결을 형성하는 것을 중요하게 생각하나요?</string>
+    <string name="question_27">일정과 계획에 따라 일하는 것을 선호하나요?</string>
+    <string name="question_28">일을 할 때 체계적으로 조직되어 있는 것을 좋아하나요?</string>
+    <string name="question_29">일을 처리할 때 미리 계획을 세우는 것을 중요하게 생각하나요?</string>
+    <string name="question_30">일정한 계획 없이 상황에 맞춰 행동하는 것을 선호하나요?</string>
+    <string name="question_31">융통성 있게 일하는 것을 좋아하나요?</string>
+    <string name="question_32">새로운 아이디어나 가능성을 탐구하는 것을 중요하게 생각하나요?</string>
+</resources>
