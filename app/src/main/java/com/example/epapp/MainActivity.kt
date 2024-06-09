@@ -5,24 +5,23 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.epapp.ui.theme.EpAppTheme
 // stinrgs.xml import
-import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
+import androidx.navigation.NavController
+import androidx.navigation.NavType
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
+import com.google.gson.Gson
+
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -34,14 +33,27 @@ class MainActivity : ComponentActivity() {
         }
     }
 }
-
+// 화면 간 이동을 관리
 @Composable
 fun MainScreen() {
-
+    val navController = rememberNavController()
+    val gson = Gson()
+    NavHost(navController = navController, startDestination = "question") {
+        // 화면 이름 지정
+        composable("question") { QuestionScreen(navController = navController, gson = gson) }
+        composable(
+            route = "result/{jsonData}", //jsonData를 넘겨줄 것을 명시
+            arguments = listOf(navArgument("jsonData") {
+                type = NavType.StringType
+            }) // Type은 String
+        ) { NavBackStackEntry ->
+            ResultScreen(data = NavBackStackEntry.arguments?.getString("jsonData") ?: "")
+        }
+    }
 }
 
 @Composable
-fun QuestinScreen() {
+fun QuestionScreen(navController: NavController, gson: Gson) {
     // 질문 대답 데이터 생성
     val qeustionWithAnswers = listOf(
         QuestionWithAnswers(1, stringResource(id = R.string.question_1), "예", "아니요"),
@@ -79,26 +91,42 @@ fun QuestinScreen() {
     )
 
     // LazyColumn 사용
-    LazyColumn {
+    Column {
+        LazyColumn {
 
-        items(qeustionWithAnswers) { questionWithAnswer ->
-            Text(text = questionWithAnswer.question)
-            Row {
-                Button(onClick = {
-                    questionWithAnswer.mbti = determineMBTI(questionWithAnswer.id, true)
-                }) {
-                    Text(text = questionWithAnswer.yesAnswer)
+            items(qeustionWithAnswers) { questionWithAnswer ->
+                Text(text = questionWithAnswer.question)
+                Row {
+                    Button(onClick = {
+                        questionWithAnswer.mbti = determineMBTI(questionWithAnswer.id, true)
+                    }) {
+                        Text(text = questionWithAnswer.yesAnswer)
+                    }
+                    Button(onClick = {
+                        questionWithAnswer.mbti = determineMBTI(questionWithAnswer.id, false)
+                    }) {
+                        Text(text = questionWithAnswer.noAnswer)
+                    }
+
                 }
-                Button(onClick = {
-                    questionWithAnswer.mbti = determineMBTI(questionWithAnswer.id, false)
-                }) {
-                    Text(text = questionWithAnswer.noAnswer)
-                }
+
             }
 
         }
 
+        Button(onClick = {
+            // Navigation 데이터 list 형태
+            val dataList = qeustionWithAnswers
+            // list형태 String 형태로 변환
+            val jsonData = gson.toJson(dataList)
+            // Navigation으로 전달
+            navController.navigate("result/$jsonData")
+        }) {
+            Text(text = "결과확인")
+        }
     }
+
+
 }
 
 // MBTI 유형을 결정 로직을 별도의 함수로 분리
@@ -173,9 +201,9 @@ fun determineMBTI(questionId: Int, isYes: Boolean): String {
     }
 }
 
-
 // 질문 데이터를 생성할 질문 데이터 클래스
 data class QuestionWithAnswers(
+    // 정확한 식별을 위해 id 변수 추가
     val id: Int,
     val question: String,
     val yesAnswer: String,
@@ -187,6 +215,6 @@ data class QuestionWithAnswers(
 @Composable
 fun MainPreview() {
     EpAppTheme {
-        QuestinScreen()
+        MainScreen()
     }
 }

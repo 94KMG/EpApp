@@ -59,6 +59,10 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
+    // Navigation 라이브러리
+    implementation("androidx.navigation:navigation-compose:2.4.0-beta01")
+    // Gson 라이브러리 : Navigation arguments 전달용
+    implementation("com.google.code.gson:gson:2.8.6")
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
