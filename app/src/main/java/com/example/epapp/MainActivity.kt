@@ -5,15 +5,20 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.epapp.ui.theme.EpAppTheme
 // stinrgs.xml import
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -21,14 +26,15 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.google.gson.Gson
-
+import java.net.URLEncoder
+import java.nio.charset.StandardCharsets
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             EpAppTheme {
-
+                MainScreen()
             }
         }
     }
@@ -91,8 +97,12 @@ fun QuestionScreen(navController: NavController, gson: Gson) {
     )
 
     // LazyColumn 사용
-    Column {
-        LazyColumn {
+    Column(
+        modifier = Modifier.fillMaxSize()
+    ){
+        LazyColumn(
+            modifier = Modifier.weight(1f)
+        ) {
 
             items(qeustionWithAnswers) { questionWithAnswer ->
                 Text(text = questionWithAnswer.question)
@@ -113,14 +123,16 @@ fun QuestionScreen(navController: NavController, gson: Gson) {
             }
 
         }
-
+        Spacer(modifier = Modifier.height(16.dp))
         Button(onClick = {
             // Navigation 데이터 list 형태
             val dataList = qeustionWithAnswers
             // list형태 String 형태로 변환
             val jsonData = gson.toJson(dataList)
+            // Json 문자열 내에 포함된 특수 문자로 JSON 형식이 깨짐(JsonSyntaxException) 보완 용도
+            val encodeedJsonData = URLEncoder.encode(jsonData, StandardCharsets.UTF_8.toString())
             // Navigation으로 전달
-            navController.navigate("result/$jsonData")
+            navController.navigate("result/$encodeedJsonData")
         }) {
             Text(text = "결과확인")
         }

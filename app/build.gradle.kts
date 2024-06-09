@@ -63,6 +63,14 @@ dependencies {
     implementation("androidx.navigation:navigation-compose:2.4.0-beta01")
     // Gson 라이브러리 : Navigation arguments 전달용
     implementation("com.google.code.gson:gson:2.8.6")
+    // Ktor 라이브러리
+    implementation("io.ktor:ktor-client-core:2.3.8")
+    implementation("io.ktor:ktor-client-cio:2.3.8")
+    implementation("io.ktor:ktor-client-content-negotiation:2.3.8")
+    implementation("io.ktor:ktor-serialization-gson:2.3.8")
+    implementation("com.google.code.gson:gson:2.8.9")
+    //Coil 라이브러리
+    implementation("io.coil-kt:coil-compose:2.1.0")
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
