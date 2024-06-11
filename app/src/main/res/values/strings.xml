@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">EpApp</string>
+    <string name="app_name">이피</string>
     <string name="question_1">당신은 사람들과의 대화를 즐깁니까?</string>
     <string name="question_2">당신은 사람들이 주목하는 것을 좋아합니까?</string>
     <string name="question_3">당신은 세부 사항에 집중하는 것을 좋아합니까?</string>

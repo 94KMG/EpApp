@@ -11,9 +11,15 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.epapp.ui.theme.EpAppTheme
 // stinrgs.xml import
@@ -25,6 +31,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.example.epapp.model.Movie
+import com.example.epapp.model.QuestionWithAnswers
 import com.google.gson.Gson
 import java.net.URLEncoder
 import java.nio.charset.StandardCharsets
@@ -39,6 +47,7 @@ class MainActivity : ComponentActivity() {
         }
     }
 }
+
 // 화면 간 이동을 관리
 @Composable
 fun MainScreen() {
@@ -53,7 +62,23 @@ fun MainScreen() {
                 type = NavType.StringType
             }) // Type은 String
         ) { NavBackStackEntry ->
-            ResultScreen(data = NavBackStackEntry.arguments?.getString("jsonData") ?: "")
+            ResultScreen(
+                data = NavBackStackEntry.arguments?.getString("jsonData") ?: "",
+                navController = navController,
+                gson = gson
+            )
+        }
+        composable(
+            route = "user_info/{mbti}/{movies}",
+            arguments = listOf(
+                navArgument("mbti") { type = NavType.StringType },
+                navArgument("movies") { type = NavType.StringType }
+            )
+        ) { NavBackStackEntry ->
+            UserInfoScreen(
+                mbti = NavBackStackEntry.arguments?.getString("mbti") ?: "",
+                movies = NavBackStackEntry.arguments?.getString("movies") ?: "",
+            )
         }
     }
 }
@@ -96,10 +121,13 @@ fun QuestionScreen(navController: NavController, gson: Gson) {
         QuestionWithAnswers(32, stringResource(id = R.string.question_32), "예", "아니요"),
     )
 
+    // Button 컴포저블 상태변수 저장 데이터
+    var buttonPushed by remember { mutableStateOf(false) }
+
     // LazyColumn 사용
     Column(
         modifier = Modifier.fillMaxSize()
-    ){
+    ) {
         LazyColumn(
             modifier = Modifier.weight(1f)
         ) {
@@ -107,14 +135,42 @@ fun QuestionScreen(navController: NavController, gson: Gson) {
             items(qeustionWithAnswers) { questionWithAnswer ->
                 Text(text = questionWithAnswer.question)
                 Row {
-                    Button(onClick = {
-                        questionWithAnswer.mbti = determineMBTI(questionWithAnswer.id, true)
-                    }) {
+                    Button(
+                        onClick = {
+                            buttonPushed = !buttonPushed
+                            questionWithAnswer.mbti = determineMBTI(questionWithAnswer.id, true)
+                        },
+                        colors = if (buttonPushed) {
+                            ButtonDefaults.buttonColors(
+                                contentColor = Color.LightGray,
+                                containerColor = Color.Gray
+                            )
+                        } else {
+                            ButtonDefaults.buttonColors(
+                                contentColor = Color.White,
+                                containerColor = Color.Blue
+                            )
+                        }
+                    ) {
                         Text(text = questionWithAnswer.yesAnswer)
                     }
-                    Button(onClick = {
-                        questionWithAnswer.mbti = determineMBTI(questionWithAnswer.id, false)
-                    }) {
+                    Button(
+                        onClick = {
+                            buttonPushed = !buttonPushed
+                            questionWithAnswer.mbti = determineMBTI(questionWithAnswer.id, false)
+                        },
+                        colors = if (buttonPushed) {
+                            ButtonDefaults.buttonColors(
+                                contentColor = Color.LightGray,
+                                containerColor = Color.Gray
+                            )
+                        } else {
+                            ButtonDefaults.buttonColors(
+                                contentColor = Color.White,
+                                containerColor = Color.Blue
+                            )
+                        }
+                    ) {
                         Text(text = questionWithAnswer.noAnswer)
                     }
 
@@ -125,20 +181,18 @@ fun QuestionScreen(navController: NavController, gson: Gson) {
         }
         Spacer(modifier = Modifier.height(16.dp))
         Button(onClick = {
-            // Navigation 데이터 list 형태
+            // 데이터 리스트라고 명시하기 위해서 그냥 씀
             val dataList = qeustionWithAnswers
             // list형태 String 형태로 변환
             val jsonData = gson.toJson(dataList)
             // Json 문자열 내에 포함된 특수 문자로 JSON 형식이 깨짐(JsonSyntaxException) 보완 용도
-            val encodeedJsonData = URLEncoder.encode(jsonData, StandardCharsets.UTF_8.toString())
+            val encodedJsonData = URLEncoder.encode(jsonData, StandardCharsets.UTF_8.toString())
             // Navigation으로 전달
-            navController.navigate("result/$encodeedJsonData")
+            navController.navigate("result/$encodedJsonData")
         }) {
             Text(text = "결과확인")
         }
     }
-
-
 }
 
 // MBTI 유형을 결정 로직을 별도의 함수로 분리
@@ -212,16 +266,6 @@ fun determineMBTI(questionId: Int, isYes: Boolean): String {
         else -> ""
     }
 }
-
-// 질문 데이터를 생성할 질문 데이터 클래스
-data class QuestionWithAnswers(
-    // 정확한 식별을 위해 id 변수 추가
-    val id: Int,
-    val question: String,
-    val yesAnswer: String,
-    val noAnswer: String,
-    var mbti: String = ""
-)
 
 @Preview(showBackground = true)
 @Composable
